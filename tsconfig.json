@@ -17,6 +17,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "monaco-ng": [
+        "dist/monaco-ng"
+      ],
+      "monaco-ng/*": [
+        "dist/monaco-ng/*"
+      ]
+    }
   }
 }
