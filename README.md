@@ -142,13 +142,13 @@ Configurations of `MonacoService`. It should be provided in the root.
 
 Its type should be `MonacoConfig`.
 
-| Property            | Description                                                         | Type     | Default Value |
-| ------------------- | ------------------------------------------------------------------- | -------- | ------------- |
-| assetsRoot          | It tells monaco-ng where to load resources of monaco editor.        | string   | -             |
-| defaultEditorOption | Default options of monaco editor.                                   | Object   | {}            |
-| onLoad              | A hook that get invoked when resources of monaco editor get loaded. | Function | -             |
-| onFirstEditorInit   | A hook that get invoked when the first monaco editor is created.    | Function | -             |
-| onInit              | A hook that get invoked when a monaco editor is created.            | Function | -             |
+| Property              | Description                                                         | Type       | Default Value |
+| --------------------- | ------------------------------------------------------------------- | ---------- | ------------- |
+| `assetsRoot`          | It tells monaco-ng where to load resources of monaco editor.        | `string`   | -             |
+| `defaultEditorOption` | Default options of monaco editor.                                   | `Object`   | `{}`          |
+| `onLoad`              | A hook that get invoked when resources of monaco editor get loaded. | `Function` | -             |
+| `onFirstEditorInit`   | A hook that get invoked when the first monaco editor is created.    | `Function` | -             |
+| `onInit`              | A hook that get invoked when a monaco editor is created.            | `Function` | -             |
 
 ## License
 
