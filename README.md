@@ -132,6 +132,10 @@ export class YourEditorComponent {
 
 ### MonacoService
 
+| Property              | Description                                                                                             | Type                                                | Default Value |
+| --------------------- | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | ------------- |
+| `updateDefaultOption` | Update default editor options. You can use `force` to make the change applied to every existing editor. | `(option: JoinedEditorOption, force = false): void` | -             |
+
 ### MONACO_CONFIG
 
 Configurations of `MonacoService`. It should be provided in the root.

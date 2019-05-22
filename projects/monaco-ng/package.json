@@ -1,6 +1,26 @@
 {
   "name": "@silicic/monaco-ng",
   "version": "0.0.1",
+  "author": {
+    "name": "Wendell Hu",
+    "email": "wendzhue@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/silicic-acid/monaco-ng"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/silicic-acid/monaco-ng/issues"
+  },
+  "description": "A monaco editor loader and renderer for Angular",
+  "keywords": [
+    "monaco-editor",
+    "monaco-plugin",
+    "angular",
+    "component",
+    "silicic"
+  ],
   "peerDependencies": {
     "@angular/common": "^7.2.0",
     "@angular/core": "^7.2.0",

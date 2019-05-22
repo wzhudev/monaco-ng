@@ -44,3 +44,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Copied README.md
+projects/monaco-ng/README.md
+projects/monaco-ng/demo.png
