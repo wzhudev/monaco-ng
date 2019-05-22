@@ -1,20 +1,68 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<div class="page-container">
+  <header>
+    <h1 class="header">
+      Monaco for Angular
+    </h1>
+  </header>
+  <div class="container">
+    <section id="demo">
+      <h2 class="header">Demo</h2>
+      <h3>Normal Editor</h3>
+      <p class="text">
+        Render a monaco editor.
+      </p>
+      <div class="full-width-container">
+        <div class="editor-container">
+          <si-monaco-editor id="editor"
+                            [ngModel]="code"
+                            [editorOption]="editorOption"></si-monaco-editor>
+        </div>
+      </div>
+      <div class="description text">Try to type on it.</div>
+      <h3>Diff Editor</h3>
+      <p class="text">
+        Render a diff editor.
+      </p>
+      <div class="full-width-container">
+        <div class="editor-container">
+          <si-monaco-editor id="editor"
+                            [ngModel]="code"
+                            [mode]="'diff'"
+                            [originalText]="originalText"
+                            [editorOption]="{ language: 'typescript' }"
+                            (ngModelChange)="onModelChange($event)"></si-monaco-editor>
+        </div>
+      </div>
+    </section>
+    <section id="description">
+      <h2 class="header">Description</h2>
+      <p class="text">
+        This is a component that can help you to load monaco editor and create editor instances in Angular. Features
+        include:
 
+      </p>
+      <ol>
+        <li>Load resources of monaco editor from static file server or CDN.</li>
+        <li>Render a monaco editor in a declarative way.</li>
+        <li>Support both IEditor and IDiffEditor.</li>
+        <li>Provide hooks like <code>onInit</code> for you config themes, languages etc..</li>
+        <li>Support default editor options.</li>
+        <li>Fully controlled mode.</li>
+        <li>Update editor option of all editor instances from a service.</li>
+      </ol>
+    </section>
+    <section id="links">
+      <h2 class="header">Links</h2>
+      <ol>
+        <li><a href="https://github.com/silicic-acid/monaco-ng">Repo on GitHub</a>, with docs.</li>
+      </ol>
+    </section>
+    <section id="license">
+      <h2 class="header">License</h2>
+      <p class="text">
+        MIT
+      </p>
+    </section>
+  </div>
+  <footer>MIT, 2019 © Wendell Hu with ❤️</footer>
+</div>

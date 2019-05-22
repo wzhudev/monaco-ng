@@ -1,8 +1,10 @@
-nz-monaco-editor {
+si-monaco-editor {
   display: block;
+  height: 100%;
+  width: 100%;
 }
 
-nz-monaco-editor.fullscreen {
+si-monaco-editor.fullscreen {
   position: fixed;
   left: 0;
   right: 0;

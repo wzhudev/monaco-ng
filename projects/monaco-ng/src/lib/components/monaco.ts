@@ -1,24 +1,21 @@
 import {
-  Component,
-  ChangeDetectionStrategy,
-  ViewEncapsulation,
   AfterViewInit,
-  forwardRef,
-  OnDestroy,
-  NgZone,
+  ChangeDetectionStrategy,
+  Component,
   ElementRef,
-  Input,
-  Output,
   EventEmitter,
+  forwardRef,
+  Input,
+  NgZone,
   OnChanges,
-  SimpleChanges
+  OnDestroy,
+  Output,
+  SimpleChanges,
+  ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { editor } from 'monaco-editor';
-import { MonacoService } from '../monaco.service';
-import { EditorMode, EditorOption } from '../typings';
-import { inNextTick } from '../utils';
-import { fromEvent, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, fromEvent, Subject } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -26,11 +23,14 @@ import {
   map,
   takeUntil
 } from 'rxjs/operators';
+import { MonacoService } from '../monaco.service';
+import { EditorMode, JoinedEditorOption } from '../typings';
+import { inNextTick } from '../utils';
 
 import IEditor = editor.IEditor;
 import IDiffEditor = editor.IDiffEditor;
-import IDiffEditorModel = editor.IDiffEditorModel;
 import ITextModel = editor.ITextModel;
+import IEditorConstructionOptions = editor.IEditorConstructionOptions;
 import IDiffEditorConstructionOptions = editor.IDiffEditorConstructionOptions;
 
 declare const monaco: any;
@@ -54,6 +54,9 @@ export class MonacoComponent
   @Input() mode: EditorMode = 'normal';
   @Input() originalText = '';
   @Input() fullControl = false;
+  @Input() set editorOption(value: JoinedEditorOption) {
+    this.editorOption$.next(value);
+  }
 
   @Output() readonly editorInitialized = new EventEmitter<
     IEditor | IDiffEditor
@@ -62,11 +65,12 @@ export class MonacoComponent
   private readonly el: HTMLElement;
   private destroy$ = new Subject<void>();
   private resize$ = new Subject<void>();
-  private editorOption: EditorOption = {};
+  private editorOption$ = new BehaviorSubject<JoinedEditorOption>({});
   private editorInstance: IEditor | IDiffEditor;
   private value = '';
-  private valueModel: ITextModel | IDiffEditorModel;
-  private originalModel: ITextModel;
+  private modelSet = false;
+
+  private editorOptionCached: JoinedEditorOption = {};
 
   constructor(
     private monacoService: MonacoService,
@@ -107,12 +111,17 @@ export class MonacoComponent
 
   onTouch(): void {}
 
-  private setup(option: EditorOption): void {
+  layout(): void {
+    this.resize$.next();
+  }
+
+  private setup(option: JoinedEditorOption): void {
     inNextTick().subscribe(() => {
-      this.editorOption = option;
+      this.editorOptionCached = option;
       this.registerOptionChanges();
       this.initMonacoEditorInstance();
       this.registerResizeChange();
+      this.setValue();
 
       if (!this.fullControl) {
         this.setValueEmitter();
@@ -123,11 +132,16 @@ export class MonacoComponent
   }
 
   private registerOptionChanges(): void {
-    // TODO: use `combineLatest` to merge option on the instance.
-    this.monacoService.forceUpdateOption$
+    combineLatest(this.editorOption$, this.monacoService.forceUpdateOption$)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(forcedOpt => {
-        this.editorOption = { ...this.editorOption, ...forcedOpt };
+      .subscribe(([selfOpt, forcedOpt]) => {
+        this.editorOptionCached = {
+          ...this.editorOptionCached,
+          ...selfOpt,
+          ...forcedOpt
+        };
+
+        console.log(this.editorOptionCached);
         this.updateOptionToMonaco();
       });
   }
@@ -136,9 +150,9 @@ export class MonacoComponent
     this.ngZone.runOutsideAngular(() => {
       this.editorInstance =
         this.mode === 'normal'
-          ? monaco.editor.create(this.el, { ...this.editorOption })
+          ? monaco.editor.create(this.el, { ...this.editorOptionCached })
           : monaco.editor.createDiffEditor(this.el, {
-              ...(this.editorOption as IDiffEditorConstructionOptions)
+              ...(this.editorOptionCached as IDiffEditorConstructionOptions)
             });
     });
   }
@@ -151,7 +165,7 @@ export class MonacoComponent
           takeUntil(this.destroy$)
         )
         .subscribe(() => {
-          this.resize$.next();
+          this.layout();
         });
 
       this.resize$
@@ -179,42 +193,36 @@ export class MonacoComponent
     }
 
     if (this.mode === 'normal') {
-      if (this.valueModel) {
-        (this.valueModel as ITextModel).setValue(this.value);
+      if (this.modelSet) {
+        (this.editorInstance.getModel() as ITextModel).setValue(this.value);
       } else {
-        this.valueModel = monaco.editor.createModel(
-          this.value,
-          this.editorOption.language
+        (this.editorInstance as IEditor).setModel(
+          monaco.editor.createModel(
+            this.value,
+            (this.editorOptionCached as IEditorConstructionOptions).language
+          )
         );
-        (this.editorInstance as IEditor).setModel(this.valueModel);
+        this.modelSet = true;
       }
     } else {
-      if (this.valueModel) {
-        const model = this.valueModel as IDiffEditorModel;
+      if (this.modelSet) {
+        const model = (this.editorInstance as IDiffEditor).getModel();
         model.modified.setValue(this.value);
         model.original.setValue(this.originalText);
       } else {
-        this.valueModel = monaco.editor.createModel(
-          this.value,
-          this.editorOption.language
-        );
-        this.originalModel = monaco.editor.createModel(
-          this.originalText,
-          this.editorOption.language
-        );
+        const language = (this.editorOptionCached as any).language;
         (this.editorInstance as IDiffEditor).setModel({
-          original: this.originalModel,
-          modified: this.valueModel as ITextModel
+          original: monaco.editor.createModel(this.value, language),
+          modified: monaco.editor.createModel(this.originalText, language)
         });
       }
     }
   }
 
   private setValueEmitter(): void {
-    const model =
-      this.mode === 'normal'
-        ? (this.valueModel as ITextModel)
-        : (this.valueModel as IDiffEditorModel).modified;
+    const model = (this.mode === 'normal'
+      ? (this.editorInstance as IEditor).getModel()
+      : (this.editorInstance as IDiffEditor).getModel().modified) as ITextModel;
 
     model.onDidChangeContent(() => {
       this.emitValue(model.getValue());
@@ -228,7 +236,7 @@ export class MonacoComponent
 
   private updateOptionToMonaco(): void {
     if (this.editorInstance) {
-      this.editorInstance.updateOptions({ ...this.editorOption });
+      this.editorInstance.updateOptions({ ...this.editorOptionCached });
     }
   }
 }

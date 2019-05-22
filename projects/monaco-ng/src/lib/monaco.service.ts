@@ -1,14 +1,14 @@
-import { Injectable, Inject } from '@angular/core';
-import { Observable, Subject, of as observableOf, BehaviorSubject } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
-import {
-  MonacoLoadingStatus,
-  MonacoConfig,
-  MONACO_CONFIG,
-  EditorOption
-} from './typings';
+import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/platform-browser';
+import { BehaviorSubject, Observable, of as observableOf, Subject } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { getMonacoScriptsCannotBeLoadedError } from './errors';
+import {
+  JoinedEditorOption,
+  MONACO_CONFIG,
+  MonacoConfig,
+  MonacoLoadingStatus
+} from './typings';
 import { tryTriggerFunc } from './utils';
 
 /**
@@ -21,14 +21,14 @@ export class MonacoService {
   /**
    * Editor subscribe this to get force updated config.
    */
-  forceUpdateOption$: Observable<EditorOption>;
+  forceUpdateOption$: Observable<JoinedEditorOption>;
 
   private config: MonacoConfig;
-  private option: EditorOption;
+  private option: JoinedEditorOption;
   private document: Document;
   private firstEditorInitialized = false;
-  private forceOption: EditorOption = {};
-  private force$: Subject<MonacoConfig>;
+  private forceOption: JoinedEditorOption = {};
+  private force$: Subject<JoinedEditorOption>;
   private loaded$ = new Subject<boolean>();
   private loadingStatus = MonacoLoadingStatus.UNLOAD;
 
@@ -40,7 +40,7 @@ export class MonacoService {
     this.config = { ...(_config instanceof Array ? _config[0] : _config) };
     this.option = this.config.defaultEditorOption || {};
 
-    this.force$ = new Subject<EditorOption>();
+    this.force$ = new BehaviorSubject<JoinedEditorOption>({});
     this.forceUpdateOption$ = this.force$.asObservable();
   }
 
@@ -48,7 +48,7 @@ export class MonacoService {
    * Monaco component would call this method make sure everything
    * is ready for initializing an editor.
    */
-  requestToInit(): Observable<EditorOption> {
+  requestToInit(): Observable<JoinedEditorOption> {
     if (this.loadingStatus === MonacoLoadingStatus.LOADED) {
       this.onInit();
       return observableOf(this.getLatestOption());
@@ -64,7 +64,7 @@ export class MonacoService {
     );
   }
 
-  updateDefaultOption(option: EditorOption, force = false): void {
+  updateDefaultOption(option: JoinedEditorOption, force = false): void {
     if (force) {
       this.forceOption = { ...this.forceOption, ...option };
       this.force$.next(this.forceOption);
@@ -108,7 +108,7 @@ export class MonacoService {
   private onInit(): void {
     if (!this.firstEditorInitialized) {
       this.firstEditorInitialized = true;
-      tryTriggerFunc(this.config.onFirstEditorCreated)();
+      tryTriggerFunc(this.config.onFirstEditorInit)();
     }
 
     tryTriggerFunc(this.config.onInit)();
@@ -118,7 +118,7 @@ export class MonacoService {
     tryTriggerFunc(this.config.onLoad)();
   }
 
-  private getLatestOption(): EditorOption {
+  private getLatestOption(): JoinedEditorOption {
     return { ...this.option, ...this.forceOption };
   }
 }

@@ -1,1 +1,40 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+body {
+  overflow-x: hidden;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li,
+footer,
+.text {
+  font-family: Vollkorn, 'PingFang SC', 'Helvetica', Arial;
+}
+
+a {
+  text-decoration: none;
+  color: rgb(24, 120, 254);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+h3 {
+  font-size: 18px;
+}

@@ -6,4 +6,4 @@ import { MonacoComponent } from './monaco';
   imports: [],
   exports: [MonacoComponent]
 })
-export class MonacoNgModule {}
+export class SiMonacoModule {}

@@ -1,1 +1,0 @@
-# @silicic/monaco-ng
