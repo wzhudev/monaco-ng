@@ -1,2 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 @import '../node_modules/@silicic/share-styles/dist/index.css';
+
+.dark {
+  --text: white;
+  --background: rgb(27, 27, 27);
+}
+
+.light {
+  --text: #333;
+  --background: #fff;
+}
+
+body {
+  h1,
+  h2,
+  h3,
+  p,
+  li {
+    color: var(--text);
+  }
+
+  background-color: var(--background) !important; // Fuck antd!
+}

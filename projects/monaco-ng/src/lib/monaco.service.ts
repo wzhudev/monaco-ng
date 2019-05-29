@@ -11,6 +11,8 @@ import {
 } from './typings';
 import { tryTriggerFunc } from './utils';
 
+declare const monaco: any;
+
 /**
  *
  */
@@ -71,6 +73,10 @@ export class MonacoService {
     }
 
     this.option = { ...this.option, ...option };
+
+    if (option.theme) {
+      monaco.editor.setTheme(option.theme);
+    }
   }
 
   private loadMonacoScript(): void {

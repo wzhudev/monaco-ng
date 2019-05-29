@@ -3,6 +3,20 @@
     <h1 class="header">
       Monaco for Angular
     </h1>
+    <div class="theme-switcher">
+      <nz-switch [(ngModel)]="dark"
+                 [nzUnCheckedChildren]="lightTpl"
+                 [nzCheckedChildren]="darkTpl"
+                 (ngModelChange)="onToggleTheme()"></nz-switch>
+      <ng-template #darkTpl>
+        <i nz-icon
+           nzType="bulb"></i>
+      </ng-template>
+      <ng-template #lightTpl>
+        <i nz-icon
+           nzType="poweroff"></i>
+      </ng-template>
+    </div>
   </header>
   <div class="content-container">
     <section id="demo">
@@ -13,7 +27,9 @@
       </p>
       <div class="full-width-container">
         <div class="editor-container">
-          <si-monaco-editor id="editor" [ngModel]="code" [editorOption]="editorOption"></si-monaco-editor>
+          <si-monaco-editor id="editor"
+                            [ngModel]="code"
+                            [editorOption]="editorOption"></si-monaco-editor>
         </div>
       </div>
       <p class="center"><i>Try to type on it.</i></p>
@@ -23,8 +39,12 @@
       </p>
       <div class="full-width-container">
         <div class="editor-container">
-          <si-monaco-editor id="editor" [ngModel]="code" [mode]="'diff'" [originalText]="originalText"
-                            [editorOption]="{ language: 'typescript' }" (ngModelChange)="onModelChange($event)">
+          <si-monaco-editor id="editor"
+                            [ngModel]="code"
+                            [mode]="'diff'"
+                            [originalText]="originalText"
+                            [editorOption]="{ language: 'typescript' }"
+                            (ngModelChange)="onModelChange($event)">
           </si-monaco-editor>
         </div>
       </div>
