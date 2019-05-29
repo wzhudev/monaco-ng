@@ -4,7 +4,7 @@ A [monaco editor](https://microsoft.github.io/monaco-editor/) loader and rendere
 
 ![](./demo.png)
 
-[Demo](https://si-monaco-ng.wendzhue.now.sh)
+[Demo](https://si-monaco-ng.wendellhu.now.sh)
 
 ## Features
 
