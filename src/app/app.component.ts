@@ -1,5 +1,5 @@
+import { DOCUMENT } from '@angular/common';
 import { Component, Inject, OnInit, Renderer2 } from '@angular/core';
-import { DOCUMENT } from '@angular/platform-browser';
 import { editor } from 'monaco-editor';
 import { MonacoService } from 'projects/monaco-ng/src/public-api';
 

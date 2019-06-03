@@ -1,6 +1,6 @@
 {
   "name": "@silicic/monaco-ng",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": {
     "name": "Wendell Hu",
     "email": "wendzhue@gmail.com"
@@ -22,8 +22,8 @@
     "silicic"
   ],
   "peerDependencies": {
-    "@angular/common": "^7.2.0",
-    "@angular/core": "^7.2.0",
+    "@angular/common": "^8.0.0",
+    "@angular/core": "^8.0.0",
     "monaco-editor": "^0.13.0"
   }
 }

@@ -90,6 +90,8 @@ export class MonacoComponent
   }
 
   ngOnDestroy(): void {
+    this.editorInstance.dispose();
+
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -140,8 +142,6 @@ export class MonacoComponent
           ...selfOpt,
           ...forcedOpt
         };
-
-        console.log(this.editorOptionCached);
         this.updateOptionToMonaco();
       });
   }

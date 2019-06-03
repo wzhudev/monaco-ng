@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { DOCUMENT } from '@angular/platform-browser';
+import { DOCUMENT } from "@angular/common";
 import { BehaviorSubject, Observable, of as observableOf, Subject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { getMonacoScriptsCannotBeLoadedError } from './errors';
